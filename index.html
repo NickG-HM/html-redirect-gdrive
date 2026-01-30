@@ -3,31 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
   <title>Redirecting to Google Drive...</title>
   <script>
-    // Get the URL parameter and redirect immediately
+    // Get the URL parameter and redirect immediately without sending referrer
     (function() {
       const params = new URLSearchParams(window.location.search);
       const targetUrl = params.get('url');
       if (targetUrl) {
-        // Decode and redirect immediately
-        window.location.href = decodeURIComponent(targetUrl);
+        // Use replace instead of href to avoid referrer, and decode URL
+        const decodedUrl = decodeURIComponent(targetUrl);
+        // Use location.replace which doesn't send referrer
+        window.location.replace(decodedUrl);
       } else {
         document.body.innerHTML = '<p>No redirect URL provided.</p>';
       }
     })();
   </script>
-  <meta http-equiv="refresh" content="0;url=">
 </head>
 <body>
   <p>Redirecting to Google Drive...</p>
-  <p>If you are not redirected, <a href="#" id="fallback">click here</a>.</p>
+  <p>If you are not redirected, <a href="#" id="fallback" rel="noopener noreferrer">click here</a>.</p>
   <script>
     // Fallback link
     const params = new URLSearchParams(window.location.search);
     const targetUrl = params.get('url');
     if (targetUrl) {
-      document.getElementById('fallback').href = decodeURIComponent(targetUrl);
+      const link = document.getElementById('fallback');
+      link.href = decodeURIComponent(targetUrl);
+      link.rel = 'noopener noreferrer';
     }
   </script>
 </body>
